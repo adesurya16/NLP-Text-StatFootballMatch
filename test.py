@@ -32,7 +32,7 @@ def ie_preprocess(document):
 
 def extract_team(team_name):
 	ret = []
-	file_name = team_name + ".team"
+	file_name = "teams/" + team_name + ".team"
 	file = open(file_name, "r")
 	fl = file.readlines()
 	for l in fl:
@@ -79,7 +79,7 @@ doc = file_doc
 nlp = spacy.load('en')
 doc = nlp(doc)
 
-# dump(doc.print_tree())
+dump(doc.print_tree())
 # print(doc.vector)
 
 # for entity in doc.ents:
