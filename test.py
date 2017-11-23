@@ -36,8 +36,7 @@ def extract_team(team_name):
 	file = open(file_name, "r")
 	fl = file.readlines()
 	for l in fl:
-		ret.append(l)
-		print(l)
+		ret.append(l.rstrip())
 	return ret
 
 # doc = "GOOOOOAAAALLLL!!! MUSTAFI GIVES ARSENAL THE LEAD! Well, a bit of controversy at the Emirates, as - from the free-kick that never really was - the Germany defender heads home Ozil’s cross."
@@ -61,19 +60,22 @@ print(team2)
 
 doc = file_doc
 
-sentences = ie_preprocess(doc)
-print(sentences)
+# Using NLTK
+# sentences = ie_preprocess(doc)
+# print(sentences)
 
-chunked_sentences = nltk.ne_chunk_sents(sentences, True)
-print(chunked_sentences)
+# chunked_sentences = nltk.ne_chunk_sents(sentences, False)
+# print(chunked_sentences)
 
-for sent in chunked_sentences:
-	print(sent)
-	iob_tagged = nltk.chunk.tree2conlltags(sent)
-	print(iob_tagged)
-	for kata in sent:
-		
+# for sent in chunked_sentences:
+# 	print(sent)
+# 	iob_tagged = nltk.chunk.tree2conlltags(sent)
+# 	print(iob_tagged)
+# 	for kata in sent:
+# 		print(kata)
+# END NLTK
 
+# Using spacy
 nlp = spacy.load('en')
 doc = nlp(doc)
 
@@ -84,7 +86,8 @@ doc = nlp(doc)
 # 	print(entity.text, entity.label_)
 
 for t in doc:
-	print(t.text, t.tag_, t.ent_type_)
+	print(t.text, t.tag_, t.ent_iob_, t.ent_type_)
+# END spacy
 
 
 # [[('GOOOOOAAAALLLL', 'NN'), ('!', '.'), ('!', '.'), ('!', '.')], [('MUSTAFI', 'NNP'), ('GIVES', 'NNP'), ('ARSENAL', 'NNP'), ('THE', 'NNP'), ('LEAD', 'NNP'), ('!', '.')], [('Well', 'RB'), (',', ','), ('a', 'DT'), ('bit', 'NN'), ('of', 'IN'), ('controversy', 'NN'), ('at', 'IN'), ('the', 'DT'), ('Emirates', 'NNP'), (',', ','), ('as', 'IN'), ('-', ':'), ('from', 'IN'), ('the', 'DT'), ('free-kick', 'JJ'), ('that', 'IN'), ('never', 'RB'), ('really', 'RB'), ('was', 'VBD'), ('-', ':'), ('the', 'DT'), ('Germany', 'NNP'), ('defender', 'NN'), ('heads', 'NNS'), ('home', 'VBP'), ('Ozil', 'NNP'), ('’', 'NNP'), ('s', 'NN'), ('cross', 'NN'), ('.', '.')]]
