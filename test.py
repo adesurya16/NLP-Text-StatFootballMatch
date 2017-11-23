@@ -1,14 +1,13 @@
-import nltk, re, pprint, spacy
-import sys
+import nltk, spacy
 
-def dump(obj, nested_level=0, output=sys.stdout):
+def dump(obj, nested_level=0):
 	spacing = '   '
 	if type(obj) == dict:
 		print('%s{' % ((nested_level) * spacing))
 		for k, v in obj.items():
 			if (hasattr(v, '__iter__') and not(isinstance(v, str))):
 				print('%s%s:' % ((nested_level + 1) * spacing, k))
-				dump(v, nested_level + 1, output)
+				dump(v, nested_level + 1)
 			else:
 				print('%s%s: %s' % ((nested_level + 1) * spacing, k, v))
 		print('%s}' % (nested_level * spacing))
@@ -16,7 +15,7 @@ def dump(obj, nested_level=0, output=sys.stdout):
 		print('%s[' % ((nested_level) * spacing))
 		for v in obj:
 			if hasattr(v, '__iter__'):
-				dump(v, nested_level + 1, output)
+				dump(v, nested_level + 1)
 			else:
 				print('%s%s' % ((nested_level + 1) * spacing, v))
 		print('%s]' % ((nested_level) * spacing))
@@ -39,6 +38,15 @@ def extract_team(team_name):
 		ret.append(l.rstrip())
 	return ret
 
+def extract_match(match_file):
+	ret = []
+	file_name = "matches/" + match_file + ".match"
+	file = open(file_name, "r")
+	fl = file.readlines()
+	for l in fl:
+		ret.append(l.rstrip())
+	return ret
+
 # doc = "GOOOOOAAAALLLL!!! MUSTAFI GIVES ARSENAL THE LEAD! Well, a bit of controversy at the Emirates, as - from the free-kick that never really was - the Germany defender heads home Ozil’s cross."
 # doc = "Another chance for Tottenham, who are starting to show their quality now. Kane latches onto a looping cross from the right wing, generating enough power on his header to force Cech into an instinctive save."
 # doc = "High and wide from Sanchez who, after latching onto a pinpoint pass from Ozil - tries his luck from the edge of the area."
@@ -50,15 +58,16 @@ def extract_team(team_name):
 
 team_name_1 = input("Input name of home team: ")
 team_name_2 = input("Input name of away team: ")
-file_doc = input("Input sentences file: ")
+match_file = input("Input match file: ")
 
 team1 = extract_team(team_name_1)
 team2 = extract_team(team_name_2)
+doc = extract_match(match_file)
 
 print(team1)
 print(team2)
 
-doc = file_doc
+doc = match_file
 
 # Using NLTK
 # sentences = ie_preprocess(doc)
@@ -82,8 +91,12 @@ doc = nlp(doc)
 dump(doc.print_tree())
 # print(doc.vector)
 
+print()
+
 # for entity in doc.ents:
 # 	print(entity.text, entity.label_)
+
+# print()
 
 for t in doc:
 	print(t.text, t.tag_, t.ent_iob_, t.ent_type_)
